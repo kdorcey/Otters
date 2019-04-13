@@ -1,14 +1,3 @@
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.*;
-import java.util.Iterator;
-
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.*;
 
 
 public class Student {
@@ -19,15 +8,19 @@ public class Student {
     private String gender;
 
 
-    public Student(int studentId, String major, int score, int retakeScore, String gender) {
+    public Student(int studentId, String major, String gender) {
         this.studentId = studentId;
         this.major = major;
-        this.score = score;
-        this.retakeScore = retakeScore;
         this.gender = gender;
     }
 
 
+
+    public static String moo(){
+        return "moo";
+    }
+
+    //Grabs StudentID, Major, and Gender from the Student_Info.xlsx
 
 
     public int getStudentId() {

@@ -15,24 +15,26 @@ import java.util.HashMap;
 
 public class XLSXReader {
 
+    private String studentInfoDirect;
+    private String testScoreDirect;
+    private String retakeTestScoreDirect;
+    private HashMap<Integer, Student> allStudents;
+    private int runningGradeTotal;
 
-
-    public static void bigBoi() {
-        try {
-            HashMap<Integer, Student> allStudents = gatherStudentInfo();
-
-        } catch(IOException uhoh){
-            System.out.println("error in bigboi "+uhoh);
-        }
-
-
+    public XLSXReader(String studentInfoDirect, String testScoreDirect, String retakeTestScoreDirect){
+        this.studentInfoDirect = studentInfoDirect;
+        this.testScoreDirect = testScoreDirect;
+        this.retakeTestScoreDirect = retakeTestScoreDirect;
+        this.runningGradeTotal = 0;
     }
 
-    public static HashMap<Integer, Student> gatherStudentInfo() throws IOException{
-        //hashmap that will be returned
-        HashMap<Integer, Student> allStudents = new HashMap<Integer, Student>();
 
-        File studentInfo = new File("Student_Data/Student Info.xlsx");
+
+    public HashMap<Integer, Student> gatherStudentInfo() throws IOException{
+        //hashmap that will be returned
+        allStudents = new HashMap<Integer, Student>();
+
+        File studentInfo = new File(studentInfoDirect);
         FileInputStream fis = new FileInputStream(studentInfo);
         XSSFWorkbook workbook = new XSSFWorkbook(fis);
         XSSFSheet sheet = workbook.getSheetAt(0);
@@ -102,8 +104,8 @@ public class XLSXReader {
         return allStudents;
     }
 
-    public static HashMap<Integer, Student> gatherTestScores(HashMap<Integer, Student> allStudents) throws IOException{
-        File studentInfo = new File("Student_Data/Test Scores.xlsx");
+    public HashMap<Integer, Student> gatherTestScores() throws IOException{
+        File studentInfo = new File(testScoreDirect);
         FileInputStream fis = new FileInputStream(studentInfo);
         XSSFWorkbook workbook = new XSSFWorkbook(fis);
         XSSFSheet sheet = workbook.getSheetAt(0);
@@ -180,8 +182,8 @@ public class XLSXReader {
     }
 
 
-    public static HashMap<Integer, Student> gatherTestRetakeScores(HashMap<Integer, Student> allStudents) throws IOException{
-        File studentInfo = new File("Student_Data/Test Retake Scores.xlsx");
+    public HashMap<Integer, Student> gatherTestRetakeScores() throws IOException{
+        File studentInfo = new File(retakeTestScoreDirect);
         FileInputStream fis = new FileInputStream(studentInfo);
         XSSFWorkbook workbook = new XSSFWorkbook(fis);
         XSSFSheet sheet = workbook.getSheetAt(0);
@@ -257,5 +259,43 @@ public class XLSXReader {
 
     }
 
+    public String getStudentInfoDirect() {
+        return studentInfoDirect;
+    }
 
+    public void setStudentInfoDirect(String studentInfoDirect) {
+        this.studentInfoDirect = studentInfoDirect;
+    }
+
+    public String getTestScoreDirect() {
+        return testScoreDirect;
+    }
+
+    public void setTestScoreDirect(String testScoreDirect) {
+        this.testScoreDirect = testScoreDirect;
+    }
+
+    public String getRetakeTestScoreDirect() {
+        return retakeTestScoreDirect;
+    }
+
+    public void setRetakeTestScoreDirect(String retakeTestScoreDirect) {
+        this.retakeTestScoreDirect = retakeTestScoreDirect;
+    }
+
+    public HashMap<Integer, Student> getAllStudents() {
+        return allStudents;
+    }
+
+    public void setAllStudents(HashMap<Integer, Student> allStudents) {
+        this.allStudents = allStudents;
+    }
+
+    public int getRunningGradeTotal() {
+        return runningGradeTotal;
+    }
+
+    public void setRunningGradeTotal(int runningGradeTotal) {
+        this.runningGradeTotal = runningGradeTotal;
+    }
 }

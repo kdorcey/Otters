@@ -22,7 +22,19 @@ public class Student {
         return "moo";
     }
 
-    //Grabs StudentID, Major, and Gender from the Student_Info.xlsx
+
+
+    public int getBestScore(){
+        if(score>retakeScore){
+            return score;
+        }else if(retakeScore>score){
+            return retakeScore;
+        }
+        else{
+            return score;
+        }
+
+    }
 
 
     public int getStudentId() {
@@ -64,4 +76,6 @@ public class Student {
     public void setGender(String gender) {
         this.gender = gender;
     }
+
+
 }

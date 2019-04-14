@@ -17,7 +17,10 @@ public class XLSXReader {
     private String testScoreDirect;
     private String retakeTestScoreDirect;
     private HashMap<Integer, Student> allStudents;
-    private int runningGradeTotal; //storing
+
+    private int runningGradeTotal; //stores the sum of each students best test grade
+    private int totalStudentCount; //total number of students
+
     private Iterator<Row> rowIterator;
     private Row row;
     private Iterator<Cell> cellIterator;
@@ -27,7 +30,26 @@ public class XLSXReader {
         this.studentInfoDirect = studentInfoDirect;
         this.testScoreDirect = testScoreDirect;
         this.retakeTestScoreDirect = retakeTestScoreDirect;
-        this.runningGradeTotal = 0;
+        runningGradeTotal = 0;
+        totalStudentCount = 0;
+    }
+
+    public HashMap<Integer, Student> collectAllStudentData(){
+        try{
+            gatherStudentInfo();
+            gatherTestScores();
+            gatherTestRetakeScores();
+
+
+        }catch (IOException uhoh){
+            System.out.println("Error in collectAllStudents: "+uhoh);
+        }
+        return allStudents;
+    }
+    public int calculateAverageGrade(){
+        System.out.println("running total " + runningGradeTotal);
+        System.out.println("total student count "+totalStudentCount);
+        return runningGradeTotal/totalStudentCount;
     }
 
 
@@ -84,6 +106,7 @@ public class XLSXReader {
                 //System.out.println(cell.toString());
                 if(colCount==idColumn){
                     studentID = (int) cell.getNumericCellValue();
+                    totalStudentCount++;
                 } else if (colCount == majorColumn){
                     studentMajor = cell.toString();
                 } else if (colCount == genderColumn){
@@ -271,9 +294,11 @@ public class XLSXReader {
         //case where there isnt a retake
         if(retakeScore==-1){
             runningGradeTotal += ogTestScore;
+            System.out.println(ogTestScore);
         }
         else if(retakeScore>ogTestScore){
             runningGradeTotal += retakeScore-ogTestScore;
+            System.out.println(retakeScore+" <- "+ogTestScore);
         }
 
     }
@@ -317,4 +342,5 @@ public class XLSXReader {
     public void setRunningGradeTotal(int runningGradeTotal) {
         this.runningGradeTotal = runningGradeTotal;
     }
+    public int getTotalStudentCount(){return totalStudentCount;}
 }

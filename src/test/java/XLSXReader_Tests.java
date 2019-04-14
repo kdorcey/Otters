@@ -103,10 +103,6 @@ public class XLSXReader_Tests {
         dataCollector.updateRunningGradeTotal(2242);
         assertEquals(dataCollector.getRunningGradeTotal(), 169);
 
-
-
-
-
     }
 
 }

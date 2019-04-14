@@ -1,7 +1,6 @@
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.Ignore;
 import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
@@ -76,6 +75,37 @@ public class XLSXReader_Tests {
         } catch(IOException uhoh) {
             System.out.println("error in testReader: " + uhoh);
         }
+
+    }
+
+    @Test
+    public void testUpdateRunningSum(){
+
+        HashMap<Integer, Student> testHash = new HashMap<Integer, Student>();
+        Student testStudent = new Student(77341, "whatever", "F");
+        Student testStudent2 = new Student(2242, "whatever", "M");
+        testHash.put(77341, testStudent);
+        testHash.put(2242,testStudent2);
+        dataCollector.setAllStudents(testHash);
+
+        testStudent.setScore(80);
+        dataCollector.updateRunningGradeTotal(77341);
+        testStudent.setRetakeScore(22);
+        dataCollector.updateRunningGradeTotal(77341);
+
+
+
+
+        assertEquals(dataCollector.getRunningGradeTotal(),80);
+        testStudent2.setScore(40);
+        dataCollector.updateRunningGradeTotal(2242);
+        testStudent2.setRetakeScore(89);
+        dataCollector.updateRunningGradeTotal(2242);
+        assertEquals(dataCollector.getRunningGradeTotal(), 169);
+
+
+
+
 
     }
 

@@ -1,14 +1,12 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.*;
 import java.util.Iterator;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.*;
 
 import java.util.HashMap;
 
@@ -168,7 +166,9 @@ public class XLSXReader {
                 else if(colCount == scoreColumn){
                     if(currentStudent.getStudentId() != -1) // assures that it is not the temporary student
                     {
+                        //sets grade of current student
                         currentStudent.setScore((int) cell.getNumericCellValue());
+                        updateRunningGradeTotal(currentStudent.getStudentId());
                     }
                 }else{
                     System.out.println("unexpected column in Student Scores.xlxx");
@@ -238,15 +238,18 @@ public class XLSXReader {
                 if(colCount == idColumn) {
                     //checks if student is in hash
                     if(allStudents.containsKey((int) cell.getNumericCellValue())) {
+                        //sets current student to student in hash
                         currentStudent = allStudents.get((int) cell.getNumericCellValue());
                     }else{
                         currentStudent = nonStudent;
                     }
                 }
                 else if(colCount == scoreColumn){
-                    if(currentStudent.getStudentId() != -1) // assures that it is not the temporary student
+                    if(currentStudent.getStudentId() != -1) // assures that it is not the temporary non-student
                     {
+                        //sets retake score of current student
                         currentStudent.setRetakeScore((int) cell.getNumericCellValue());
+                        updateRunningGradeTotal(currentStudent.getStudentId());
                     }
                 }else{
                     System.out.println("unexpected column in Test Retake Scores.xlxx");
@@ -260,6 +263,20 @@ public class XLSXReader {
         fis.close();
         return allStudents;
 
+
+    }
+
+    public void updateRunningGradeTotal(int studentID){
+        int ogTestScore = allStudents.get(studentID).getScore();
+        int retakeScore = allStudents.get(studentID).getRetakeScore();
+
+        //case where there isnt a retake
+        if(retakeScore==-1){
+            runningGradeTotal += ogTestScore;
+        }
+        else if(retakeScore>ogTestScore){
+            runningGradeTotal += retakeScore-ogTestScore;
+        }
 
     }
 

@@ -19,7 +19,11 @@ public class XLSXReader {
     private String testScoreDirect;
     private String retakeTestScoreDirect;
     private HashMap<Integer, Student> allStudents;
-    private int runningGradeTotal;
+    private int runningGradeTotal; //storing
+    private Iterator<Row> rowIterator;
+    private Row row;
+    private Iterator<Cell> cellIterator;
+
 
     public XLSXReader(String studentInfoDirect, String testScoreDirect, String retakeTestScoreDirect){
         this.studentInfoDirect = studentInfoDirect;
@@ -40,9 +44,9 @@ public class XLSXReader {
         XSSFSheet sheet = workbook.getSheetAt(0);
 
         //identifying what information will be in which column
-        Iterator<Row> rowIterator = sheet.iterator();
-        Row row = rowIterator.next();
-        Iterator<Cell> cellIterator = row.cellIterator();
+        rowIterator = sheet.iterator();
+        row = rowIterator.next();
+        cellIterator = row.cellIterator();
 
         int idColumn = -1;
         int majorColumn = -1;
@@ -105,15 +109,15 @@ public class XLSXReader {
     }
 
     public HashMap<Integer, Student> gatherTestScores() throws IOException{
-        File studentInfo = new File(testScoreDirect);
-        FileInputStream fis = new FileInputStream(studentInfo);
+        File testScoreFile = new File(testScoreDirect);
+        FileInputStream fis = new FileInputStream(testScoreFile);
         XSSFWorkbook workbook = new XSSFWorkbook(fis);
         XSSFSheet sheet = workbook.getSheetAt(0);
 
         //iterators for traversing the excel file
-        Iterator<Row> rowIterator = sheet.iterator();
-        Row row = rowIterator.next();
-        Iterator<Cell> cellIterator = row.cellIterator();
+        rowIterator = sheet.iterator();
+        row = rowIterator.next();
+        cellIterator = row.cellIterator();
 
         //identifying what information will be in which column
         int idColumn = -1;
@@ -183,15 +187,15 @@ public class XLSXReader {
 
 
     public HashMap<Integer, Student> gatherTestRetakeScores() throws IOException{
-        File studentInfo = new File(retakeTestScoreDirect);
-        FileInputStream fis = new FileInputStream(studentInfo);
+        File retakeFile = new File(retakeTestScoreDirect);
+        FileInputStream fis = new FileInputStream(retakeFile);
         XSSFWorkbook workbook = new XSSFWorkbook(fis);
         XSSFSheet sheet = workbook.getSheetAt(0);
 
         //iterators for traversing the excel file
-        Iterator<Row> rowIterator = sheet.iterator();
-        Row row = rowIterator.next();
-        Iterator<Cell> cellIterator = row.cellIterator();
+        rowIterator = sheet.iterator();
+        row = rowIterator.next();
+        cellIterator = row.cellIterator();
 
         //identifying what information will be in which column
         int idColumn = -1;

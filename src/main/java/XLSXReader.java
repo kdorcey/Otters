@@ -180,7 +180,80 @@ public class XLSXReader {
     }
 
 
-    public static void gatherTestRetakeScores(){
+    public static HashMap<Integer, Student> gatherTestRetakeScores(HashMap<Integer, Student> allStudents) throws IOException{
+        File studentInfo = new File("Student_Data/Test Retake Scores.xlsx");
+        FileInputStream fis = new FileInputStream(studentInfo);
+        XSSFWorkbook workbook = new XSSFWorkbook(fis);
+        XSSFSheet sheet = workbook.getSheetAt(0);
+
+        //iterators for traversing the excel file
+        Iterator<Row> rowIterator = sheet.iterator();
+        Row row = rowIterator.next();
+        Iterator<Cell> cellIterator = row.cellIterator();
+
+        //identifying what information will be in which column
+        int idColumn = -1;
+        int scoreColumn = -1;
+
+        int colCount = 0;
+        while(cellIterator.hasNext()){
+            Cell cell = cellIterator.next();
+            String colName = cell.toString();
+
+            if(colName.contains("studentId")){
+                idColumn = colCount;
+            }else if(colName.contains("score")) {
+                scoreColumn = colCount;
+            }else{
+                System.out.println("unexpected column in Test Retake Scores.xlsx");
+            }
+            colCount++;
+        }
+
+
+        //updating the Student objects in the allStudents hash
+        //todo: maybe add something that prints an error if a score is -1?
+        int studentID = -1;
+        int score = -1;
+        colCount = 0;
+
+        //todo: IMPROVE THIS
+        Student nonStudent = new Student(-1,"moo", "f");
+        Student currentStudent = nonStudent;
+
+        while(rowIterator.hasNext()){
+            row = rowIterator.next();
+            cellIterator = row.cellIterator();
+
+            colCount = 0;
+            while(cellIterator.hasNext()){
+                Cell cell = cellIterator.next();
+
+                if(colCount == idColumn) {
+                    //checks if student is in hash
+                    if(allStudents.containsKey((int) cell.getNumericCellValue())) {
+                        currentStudent = allStudents.get((int) cell.getNumericCellValue());
+                    }else{
+                        currentStudent = nonStudent;
+                    }
+                }
+                else if(colCount == scoreColumn){
+                    if(currentStudent.getStudentId() != -1) // assures that it is not the temporary student
+                    {
+                        currentStudent.setRetakeScore((int) cell.getNumericCellValue());
+                    }
+                }else{
+                    System.out.println("unexpected column in Test Retake Scores.xlxx");
+                }
+
+                colCount++;
+            }
+        }
+
+        workbook.close();
+        fis.close();
+        return allStudents;
+
 
     }
 

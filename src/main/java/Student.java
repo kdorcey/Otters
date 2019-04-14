@@ -12,6 +12,8 @@ public class Student {
         this.studentId = studentId;
         this.major = major;
         this.gender = gender;
+        score = -1;
+        retakeScore = -1;
     }
 
 

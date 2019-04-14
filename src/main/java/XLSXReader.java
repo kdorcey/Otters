@@ -54,7 +54,6 @@ public class XLSXReader {
         while(cellIterator.hasNext()){
             Cell cell = cellIterator.next();
             String colName = cell.toString();
-            System.out.println(colName);
             if(colName.contains("studentId")){
                 idColumn = colCount;
             }else if(colName.contains("major")){
@@ -68,7 +67,6 @@ public class XLSXReader {
             }
             colCount++;
         }
-        System.out.println(idColumn+" "+ majorColumn+" "+ genderColumn);
 
         //todo: maybe put something here to ends the method if any of them are still -1?
 

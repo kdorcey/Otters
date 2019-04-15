@@ -1,4 +1,7 @@
-
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
 
 public class Student {
     private int studentId;
@@ -6,6 +9,11 @@ public class Student {
     private int score;
     private int retakeScore;
     private String gender;
+
+    public static int runningGradeTotal = 0; //stores the sum of each students best test grade
+    public static int totalStudentCount = 0; //total number of students
+
+    public static Set<Student> fCompSciStu = new HashSet<Student>();
 
 
     public Student(int studentId, String major, String gender) {
@@ -75,6 +83,14 @@ public class Student {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public static int calculateAverageGrade(){
+        return runningGradeTotal/totalStudentCount;
+    }
+
+    public String toString(){
+        return ""+studentId;
     }
 
 

@@ -4,7 +4,9 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import static org.junit.Assert.assertEquals;
 
@@ -16,6 +18,8 @@ public class XLSXReader_Tests {
     public void createReaderObject(){
         dataCollector = new XLSXReader("Student_Data/Student Info.xlsx",
                 "Student_Data/Test Scores.xlsx", "Student_Data/Test Retake Scores.xlsx" );
+        Student.runningGradeTotal =0;
+        Student.fCompSciStu = new HashSet<Student>();
 
 
     }
@@ -28,9 +32,9 @@ public class XLSXReader_Tests {
 
             HashMap<Integer,Student> testHash;
             testHash = dataCollector.gatherStudentInfo();
-            assertEquals(testHash.size(),9);
+            assertEquals(9,testHash.size());
             Student testStudent = testHash.get(80012);
-            assertEquals(testStudent.getMajor(),"english");
+            assertEquals("english",testStudent.getMajor());
 
 
         } catch(IOException uhoh){
@@ -48,8 +52,8 @@ public class XLSXReader_Tests {
 
             HashMap<Integer,Student> returnedHash = dataCollector.gatherTestScores();
             Student updatedStudent = returnedHash.get(11211);
-            assertEquals(updatedStudent.getScore(),100);
-            assertEquals(returnedHash.size(), 1);
+            assertEquals(100,updatedStudent.getScore());
+            assertEquals(1,returnedHash.size());
 
 
 
@@ -69,8 +73,8 @@ public class XLSXReader_Tests {
             HashMap<Integer, Student> returnedHash = dataCollector.gatherTestRetakeScores();
             Student updatedStudent = returnedHash.get(77341);
 
-            assertEquals(updatedStudent.getRetakeScore(), 75);
-            assertEquals(returnedHash.size(), 1);
+            assertEquals(75,updatedStudent.getRetakeScore());
+            assertEquals(1,returnedHash.size());
 
         } catch(IOException uhoh) {
             System.out.println("error in testReader: " + uhoh);
@@ -96,13 +100,23 @@ public class XLSXReader_Tests {
 
 
 
-        assertEquals(dataCollector.getRunningGradeTotal(),80);
+        assertEquals(80,Student.runningGradeTotal);
         testStudent2.setScore(40);
         dataCollector.updateRunningGradeTotal(2242);
         testStudent2.setRetakeScore(89);
         dataCollector.updateRunningGradeTotal(2242);
-        assertEquals(dataCollector.getRunningGradeTotal(), 169);
+        assertEquals(169,Student.runningGradeTotal);
 
+    }
+    @Test
+    public void testfCompSciStudents(){
+        try {
+            dataCollector.gatherStudentInfo();
+            assertEquals(3,Student.fCompSciStu.size());
+
+        } catch (IOException uhoh){
+            System.out.println(uhoh);
+        }
     }
 
 }

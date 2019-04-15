@@ -18,43 +18,34 @@ public class XLSXReader {
     private String retakeTestScoreDirect;
     private HashMap<Integer, Student> allStudents;
 
-    private int runningGradeTotal; //stores the sum of each students best test grade
-    private int totalStudentCount; //total number of students
 
     private Iterator<Row> rowIterator;
     private Row row;
     private Iterator<Cell> cellIterator;
 
 
-    public XLSXReader(String studentInfoDirect, String testScoreDirect, String retakeTestScoreDirect){
+    public XLSXReader(String studentInfoDirect, String testScoreDirect, String retakeTestScoreDirect) {
         this.studentInfoDirect = studentInfoDirect;
         this.testScoreDirect = testScoreDirect;
         this.retakeTestScoreDirect = retakeTestScoreDirect;
-        runningGradeTotal = 0;
-        totalStudentCount = 0;
+
     }
 
-    public HashMap<Integer, Student> collectAllStudentData(){
-        try{
+    public HashMap<Integer, Student> collectAllStudentData() {
+        try {
             gatherStudentInfo();
             gatherTestScores();
             gatherTestRetakeScores();
 
 
-        }catch (IOException uhoh){
-            System.out.println("Error in collectAllStudents: "+uhoh);
+        } catch (IOException uhoh) {
+            System.out.println("Error in collectAllStudents: " + uhoh);
         }
         return allStudents;
     }
-    public int calculateAverageGrade(){
-        System.out.println("running total " + runningGradeTotal);
-        System.out.println("total student count "+totalStudentCount);
-        return runningGradeTotal/totalStudentCount;
-    }
 
 
-
-    public HashMap<Integer, Student> gatherStudentInfo() throws IOException{
+    public HashMap<Integer, Student> gatherStudentInfo() throws IOException {
         //hashmap that will be returned
         allStudents = new HashMap<Integer, Student>();
 
@@ -73,18 +64,19 @@ public class XLSXReader {
         int genderColumn = -1;
 
         int colCount = 0;
-        while(cellIterator.hasNext()){
+        while (cellIterator.hasNext()) {
             Cell cell = cellIterator.next();
             String colName = cell.toString();
-            if(colName.contains("studentId")){
+            if (colName.contains("studentId")) {
                 idColumn = colCount;
-            }else if(colName.contains("major")){
+            } else if (colName.contains("major")) {
                 majorColumn = colCount;
 
-            }else if(colName.contains("gender")){
+            } else if (colName.contains("gender")) {
                 genderColumn = colCount;
 
-            }else{
+
+            } else {
                 System.out.println("unexpected Column in Student_Info.xlsx");
             }
             colCount++;
@@ -96,26 +88,35 @@ public class XLSXReader {
         int studentID = -1;
         String studentMajor = "error";
         String studentGender = "?";
-        while(rowIterator.hasNext()){
+        while (rowIterator.hasNext()) {
             row = rowIterator.next();
             cellIterator = row.cellIterator();
 
-            colCount =0;
-            while(cellIterator.hasNext()){
+            colCount = 0;
+            while (cellIterator.hasNext()) {
                 Cell cell = cellIterator.next();
                 //System.out.println(cell.toString());
-                if(colCount==idColumn){
+                if (colCount == idColumn) {
                     studentID = (int) cell.getNumericCellValue();
-                    totalStudentCount++;
-                } else if (colCount == majorColumn){
+                    Student.totalStudentCount++;
+                } else if (colCount == majorColumn) {
                     studentMajor = cell.toString();
-                } else if (colCount == genderColumn){
+                } else if (colCount == genderColumn) {
                     studentGender = cell.toString();
-                }else{
+
+                    //As the gender column is the final column in the row i'm adding students to the list here to avoid
+                    //repeated variables
+                    Student studentToAdd = new Student(studentID, studentMajor, studentGender);
+                    allStudents.put(studentID, studentToAdd);
+
+                    if(studentMajor.contains("computer science")&&studentGender.contains("F")){
+                        Student.fCompSciStu.add(studentToAdd);
+                    }
+
+                } else {
                     System.out.println("unexpected Column in Student_Info.xlsx");
                 }
-                Student studentToAdd = new Student(studentID, studentMajor, studentGender);
-                allStudents.put(studentID, studentToAdd);
+
 
                 colCount++;
             }
@@ -127,7 +128,7 @@ public class XLSXReader {
         return allStudents;
     }
 
-    public HashMap<Integer, Student> gatherTestScores() throws IOException{
+    public HashMap<Integer, Student> gatherTestScores() throws IOException {
         File testScoreFile = new File(testScoreDirect);
         FileInputStream fis = new FileInputStream(testScoreFile);
         XSSFWorkbook workbook = new XSSFWorkbook(fis);
@@ -143,15 +144,15 @@ public class XLSXReader {
         int scoreColumn = -1;
 
         int colCount = 0;
-        while(cellIterator.hasNext()){
+        while (cellIterator.hasNext()) {
             Cell cell = cellIterator.next();
             String colName = cell.toString();
 
-            if(colName.contains("studentId")){
+            if (colName.contains("studentId")) {
                 idColumn = colCount;
-            }else if(colName.contains("score")) {
+            } else if (colName.contains("score")) {
                 scoreColumn = colCount;
-            }else{
+            } else {
                 System.out.println("woof Column in Student Scores.xlsx");
             }
             colCount++;
@@ -165,33 +166,32 @@ public class XLSXReader {
         colCount = 0;
 
         //todo: IMPROVE THIS
-        Student nonStudent = new Student(-1,"moo", "f");
+        Student nonStudent = new Student(-1, "moo", "f");
         Student currentStudent = nonStudent;
 
-        while(rowIterator.hasNext()){
+        while (rowIterator.hasNext()) {
             row = rowIterator.next();
             cellIterator = row.cellIterator();
 
             colCount = 0;
-            while(cellIterator.hasNext()){
+            while (cellIterator.hasNext()) {
                 Cell cell = cellIterator.next();
 
-                if(colCount == idColumn) {
+                if (colCount == idColumn) {
                     //checks if student is in hash
-                    if(allStudents.containsKey((int) cell.getNumericCellValue())) {
+                    if (allStudents.containsKey((int) cell.getNumericCellValue())) {
                         currentStudent = allStudents.get((int) cell.getNumericCellValue());
-                    }else{
+                    } else {
                         currentStudent = nonStudent;
                     }
-                }
-                else if(colCount == scoreColumn){
-                    if(currentStudent.getStudentId() != -1) // assures that it is not the temporary student
+                } else if (colCount == scoreColumn) {
+                    if (currentStudent.getStudentId() != -1) // assures that it is not the temporary student
                     {
                         //sets grade of current student
                         currentStudent.setScore((int) cell.getNumericCellValue());
                         updateRunningGradeTotal(currentStudent.getStudentId());
                     }
-                }else{
+                } else {
                     System.out.println("unexpected column in Student Scores.xlxx");
                 }
 
@@ -207,7 +207,7 @@ public class XLSXReader {
     }
 
 
-    public HashMap<Integer, Student> gatherTestRetakeScores() throws IOException{
+    public HashMap<Integer, Student> gatherTestRetakeScores() throws IOException {
         File retakeFile = new File(retakeTestScoreDirect);
         FileInputStream fis = new FileInputStream(retakeFile);
         XSSFWorkbook workbook = new XSSFWorkbook(fis);
@@ -223,15 +223,15 @@ public class XLSXReader {
         int scoreColumn = -1;
 
         int colCount = 0;
-        while(cellIterator.hasNext()){
+        while (cellIterator.hasNext()) {
             Cell cell = cellIterator.next();
             String colName = cell.toString();
 
-            if(colName.contains("studentId")){
+            if (colName.contains("studentId")) {
                 idColumn = colCount;
-            }else if(colName.contains("score")) {
+            } else if (colName.contains("score")) {
                 scoreColumn = colCount;
-            }else{
+            } else {
                 System.out.println("unexpected column in Test Retake Scores.xlsx");
             }
             colCount++;
@@ -245,34 +245,33 @@ public class XLSXReader {
         colCount = 0;
 
         //todo: IMPROVE THIS
-        Student nonStudent = new Student(-1,"moo", "f");
+        Student nonStudent = new Student(-1, "moo", "f");
         Student currentStudent = nonStudent;
 
-        while(rowIterator.hasNext()){
+        while (rowIterator.hasNext()) {
             row = rowIterator.next();
             cellIterator = row.cellIterator();
 
             colCount = 0;
-            while(cellIterator.hasNext()){
+            while (cellIterator.hasNext()) {
                 Cell cell = cellIterator.next();
 
-                if(colCount == idColumn) {
+                if (colCount == idColumn) {
                     //checks if student is in hash
-                    if(allStudents.containsKey((int) cell.getNumericCellValue())) {
+                    if (allStudents.containsKey((int) cell.getNumericCellValue())) {
                         //sets current student to student in hash
                         currentStudent = allStudents.get((int) cell.getNumericCellValue());
-                    }else{
+                    } else {
                         currentStudent = nonStudent;
                     }
-                }
-                else if(colCount == scoreColumn){
-                    if(currentStudent.getStudentId() != -1) // assures that it is not the temporary non-student
+                } else if (colCount == scoreColumn) {
+                    if (currentStudent.getStudentId() != -1) // assures that it is not the temporary non-student
                     {
                         //sets retake score of current student
                         currentStudent.setRetakeScore((int) cell.getNumericCellValue());
                         updateRunningGradeTotal(currentStudent.getStudentId());
                     }
-                }else{
+                } else {
                     System.out.println("unexpected column in Test Retake Scores.xlxx");
                 }
 
@@ -287,18 +286,15 @@ public class XLSXReader {
 
     }
 
-    public void updateRunningGradeTotal(int studentID){
+    public void updateRunningGradeTotal(int studentID) {
         int ogTestScore = allStudents.get(studentID).getScore();
         int retakeScore = allStudents.get(studentID).getRetakeScore();
 
         //case where there isnt a retake
-        if(retakeScore==-1){
-            runningGradeTotal += ogTestScore;
-            System.out.println(ogTestScore);
-        }
-        else if(retakeScore>ogTestScore){
-            runningGradeTotal += retakeScore-ogTestScore;
-            System.out.println(retakeScore+" <- "+ogTestScore);
+        if (retakeScore == -1) {
+            Student.runningGradeTotal += ogTestScore;
+        } else if (retakeScore > ogTestScore) {
+            Student.runningGradeTotal += retakeScore - ogTestScore;
         }
 
     }
@@ -335,12 +331,4 @@ public class XLSXReader {
         this.allStudents = allStudents;
     }
 
-    public int getRunningGradeTotal() {
-        return runningGradeTotal;
-    }
-
-    public void setRunningGradeTotal(int runningGradeTotal) {
-        this.runningGradeTotal = runningGradeTotal;
-    }
-    public int getTotalStudentCount(){return totalStudentCount;}
 }

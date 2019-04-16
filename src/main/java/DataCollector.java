@@ -26,9 +26,9 @@ public class DataCollector {
     private Iterator<Cell> cellIterator;
 
 
+    //data fields for student info
     private int runningGradeTotal; //stores the sum of each students best test grade
     private int totalStudentCount; //total number of students
-    private int numberOfStudents ;
     private Set<Student> fCompSciStu;
 
 
@@ -41,7 +41,6 @@ public class DataCollector {
         //if
         runningGradeTotal = 0;
         totalStudentCount = 0;
-        numberOfStudents = 0;
         fCompSciStu =  new HashSet<Student>();
 
     }
@@ -372,14 +371,6 @@ public class DataCollector {
 
     public void setTotalStudentCount(int totalStudentCount) {
         this.totalStudentCount = totalStudentCount;
-    }
-
-    public int getNumberOfStudents() {
-        return numberOfStudents;
-    }
-
-    public void setNumberOfStudents(int numberOfStudents) {
-        this.numberOfStudents = numberOfStudents;
     }
 
     public Set<Student> getfCompSciStu() {

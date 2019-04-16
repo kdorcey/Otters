@@ -18,9 +18,6 @@ public class DataCollector_Tests {
     public void createReaderObject(){
         dataCollector = new DataCollector("Student_Data/Student Info.xlsx",
                 "Student_Data/Test Scores.xlsx", "Student_Data/Test Retake Scores.xlsx" );
-
-
-
     }
 
     @Rule

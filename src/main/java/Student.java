@@ -10,10 +10,7 @@ public class Student {
     private int retakeScore;
     private String gender;
 
-    public static int runningGradeTotal = 0; //stores the sum of each students best test grade
-    public static int totalStudentCount = 0; //total number of students
 
-    public static Set<Student> fCompSciStu = new HashSet<Student>();
 
 
     public Student(int studentId, String major, String gender) {
@@ -85,9 +82,6 @@ public class Student {
         this.gender = gender;
     }
 
-    public static int calculateAverageGrade(){
-        return runningGradeTotal/totalStudentCount;
-    }
 
     public String toString(){
         return ""+studentId;

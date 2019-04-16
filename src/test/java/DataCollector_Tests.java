@@ -4,22 +4,21 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import static org.junit.Assert.assertEquals;
 
-public class XLSXReader_Tests {
+public class DataCollector_Tests {
     //todo: figure out if you need that rule or not
-    XLSXReader dataCollector;
+    DataCollector dataCollector;
+
+
 
     @Before
     public void createReaderObject(){
-        dataCollector = new XLSXReader("Student_Data/Student Info.xlsx",
+        dataCollector = new DataCollector("Student_Data/Student Info.xlsx",
                 "Student_Data/Test Scores.xlsx", "Student_Data/Test Retake Scores.xlsx" );
-        Student.runningGradeTotal =0;
-        Student.fCompSciStu = new HashSet<Student>();
+
 
 
     }
@@ -100,19 +99,19 @@ public class XLSXReader_Tests {
 
 
 
-        assertEquals(80,Student.runningGradeTotal);
+        assertEquals(80,dataCollector.getRunningGradeTotal());
         testStudent2.setScore(40);
         dataCollector.updateRunningGradeTotal(2242);
         testStudent2.setRetakeScore(89);
         dataCollector.updateRunningGradeTotal(2242);
-        assertEquals(169,Student.runningGradeTotal);
+        assertEquals(169,dataCollector.getRunningGradeTotal());
 
     }
     @Test
     public void testfCompSciStudents(){
         try {
             dataCollector.gatherStudentInfo();
-            assertEquals(3,Student.fCompSciStu.size());
+            assertEquals(3,dataCollector.getfCompSciStu().size());
 
         } catch (IOException uhoh){
             System.out.println(uhoh);

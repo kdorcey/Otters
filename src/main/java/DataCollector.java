@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -9,9 +10,10 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.HashMap;
+import java.util.Set;
 
 
-public class XLSXReader {
+public class DataCollector {
 
     private String studentInfoDirect;
     private String testScoreDirect;
@@ -24,12 +26,32 @@ public class XLSXReader {
     private Iterator<Cell> cellIterator;
 
 
-    public XLSXReader(String studentInfoDirect, String testScoreDirect, String retakeTestScoreDirect) {
+    private int runningGradeTotal; //stores the sum of each students best test grade
+    private int totalStudentCount; //total number of students
+    private int numberOfStudents ;
+    private Set<Student> fCompSciStu;
+
+
+    public DataCollector(String studentInfoDirect, String testScoreDirect, String retakeTestScoreDirect) {
         this.studentInfoDirect = studentInfoDirect;
         this.testScoreDirect = testScoreDirect;
         this.retakeTestScoreDirect = retakeTestScoreDirect;
 
+        //resets on object creation. Maybe this should be non static fields in the reader object? that way
+        //if
+        runningGradeTotal = 0;
+        totalStudentCount = 0;
+        numberOfStudents = 0;
+        fCompSciStu =  new HashSet<Student>();
+
     }
+
+
+    public int calculateAverageGrade(){
+        return runningGradeTotal/totalStudentCount;
+    }
+
+
 
     public HashMap<Integer, Student> collectAllStudentData() {
         try {
@@ -98,7 +120,7 @@ public class XLSXReader {
                 //System.out.println(cell.toString());
                 if (colCount == idColumn) {
                     studentID = (int) cell.getNumericCellValue();
-                    Student.totalStudentCount++;
+                    totalStudentCount++;
                 } else if (colCount == majorColumn) {
                     studentMajor = cell.toString();
                 } else if (colCount == genderColumn) {
@@ -110,7 +132,7 @@ public class XLSXReader {
                     allStudents.put(studentID, studentToAdd);
 
                     if(studentMajor.contains("computer science")&&studentGender.contains("F")){
-                        Student.fCompSciStu.add(studentToAdd);
+                        fCompSciStu.add(studentToAdd);
                     }
 
                 } else {
@@ -292,12 +314,17 @@ public class XLSXReader {
 
         //case where there isnt a retake
         if (retakeScore == -1) {
-            Student.runningGradeTotal += ogTestScore;
+            runningGradeTotal += ogTestScore;
         } else if (retakeScore > ogTestScore) {
-            Student.runningGradeTotal += retakeScore - ogTestScore;
+            runningGradeTotal += retakeScore - ogTestScore;
         }
 
     }
+
+
+
+
+
 
     public String getStudentInfoDirect() {
         return studentInfoDirect;
@@ -330,5 +357,38 @@ public class XLSXReader {
     public void setAllStudents(HashMap<Integer, Student> allStudents) {
         this.allStudents = allStudents;
     }
+
+    public int getRunningGradeTotal() {
+        return runningGradeTotal;
+    }
+
+    public void setRunningGradeTotal(int runningGradeTotal) {
+        this.runningGradeTotal = runningGradeTotal;
+    }
+
+    public int getTotalStudentCount() {
+        return totalStudentCount;
+    }
+
+    public void setTotalStudentCount(int totalStudentCount) {
+        this.totalStudentCount = totalStudentCount;
+    }
+
+    public int getNumberOfStudents() {
+        return numberOfStudents;
+    }
+
+    public void setNumberOfStudents(int numberOfStudents) {
+        this.numberOfStudents = numberOfStudents;
+    }
+
+    public Set<Student> getfCompSciStu() {
+        return fCompSciStu;
+    }
+
+    public void setfCompSciStu(Set<Student> fCompSciStu) {
+        this.fCompSciStu = fCompSciStu;
+    }
+
 
 }

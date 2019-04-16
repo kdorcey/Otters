@@ -45,7 +45,11 @@ public class DataCollector {
 
 
     public int calculateAverageGrade(){
-        return runningGradeTotal/totalStudentCount;
+        if(totalStudentCount!=0) {
+            return runningGradeTotal / totalStudentCount;
+        } else{
+            return 0;
+        }
     }
 
 
@@ -101,7 +105,10 @@ public class DataCollector {
             colCount++;
         }
 
-        //todo: maybe put something here to ends the method if any of them are still -1?
+        if(idColumn==-1 || majorColumn == -1 || genderColumn == -1){
+            //assures that the correct columns exist
+            return null;
+        }
 
 
         int studentID = -1;
@@ -114,7 +121,6 @@ public class DataCollector {
             colCount = 0;
             while (cellIterator.hasNext()) {
                 Cell cell = cellIterator.next();
-                //System.out.println(cell.toString());
                 if (colCount == idColumn) {
                     studentID = (int) cell.getNumericCellValue();
                     totalStudentCount++;
@@ -139,7 +145,6 @@ public class DataCollector {
 
                 colCount++;
             }
-            //System.out.println();
         }
 
         workbook.close();
@@ -179,12 +184,10 @@ public class DataCollector {
 
 
         //updating the Student objects in the allStudents hash
-        //todo: maybe add something that prints an error if a score is -1?
         int studentID = -1;
         int score = -1;
         colCount = 0;
 
-        //todo: IMPROVE THIS
         Student nonStudent = new Student(-1, "moo", "f");
         Student currentStudent = nonStudent;
 
@@ -258,12 +261,10 @@ public class DataCollector {
 
 
         //updating the Student objects in the allStudents hash
-        //todo: maybe add something that prints an error if a score is -1?
         int studentID = -1;
         int score = -1;
         colCount = 0;
 
-        //todo: IMPROVE THIS
         Student nonStudent = new Student(-1, "moo", "f");
         Student currentStudent = nonStudent;
 

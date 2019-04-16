@@ -9,10 +9,7 @@ import java.util.HashMap;
 import static org.junit.Assert.assertEquals;
 
 public class DataCollector_Tests {
-    //todo: figure out if you need that rule or not
     DataCollector dataCollector;
-
-
 
     @Before
     public void createReaderObject(){

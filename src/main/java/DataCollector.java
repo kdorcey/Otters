@@ -29,7 +29,7 @@ public class DataCollector {
     //data fields for student info
     private int runningGradeTotal; //stores the sum of each students best test grade
     private int totalStudentCount; //total number of students
-    private Set<Student> fCompSciStu;
+    private HashMap<Integer,Student> fCompSciStu;
 
 
     public DataCollector(String studentInfoDirect, String testScoreDirect, String retakeTestScoreDirect) {
@@ -40,7 +40,7 @@ public class DataCollector {
 
         runningGradeTotal = 0;
         totalStudentCount = 0;
-        fCompSciStu =  new HashSet<Student>();
+        fCompSciStu =  new HashMap<Integer, Student>();
     }
 
 
@@ -129,7 +129,7 @@ public class DataCollector {
                     allStudents.put(studentID, studentToAdd);
 
                     if(studentMajor.contains("computer science")&&studentGender.contains("F")){
-                        fCompSciStu.add(studentToAdd);
+                        fCompSciStu.put(studentID,studentToAdd);
                     }
 
                 } else {
@@ -371,11 +371,11 @@ public class DataCollector {
         this.totalStudentCount = totalStudentCount;
     }
 
-    public Set<Student> getfCompSciStu() {
+    public HashMap<Integer, Student> getfCompSciStu() {
         return fCompSciStu;
     }
 
-    public void setfCompSciStu(Set<Student> fCompSciStu) {
+    public void setfCompSciStu(HashMap<Integer,Student> fCompSciStu) {
         this.fCompSciStu = fCompSciStu;
     }
 

@@ -37,12 +37,10 @@ public class DataCollector {
         this.testScoreDirect = testScoreDirect;
         this.retakeTestScoreDirect = retakeTestScoreDirect;
 
-        //resets on object creation. Maybe this should be non static fields in the reader object? that way
-        //if
+
         runningGradeTotal = 0;
         totalStudentCount = 0;
         fCompSciStu =  new HashSet<Student>();
-
     }
 
 

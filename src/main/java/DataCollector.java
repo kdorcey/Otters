@@ -177,7 +177,7 @@ public class DataCollector {
             } else if (colName.contains("score")) {
                 scoreColumn = colCount;
             } else {
-                System.out.println("woof Column in Student Scores.xlsx");
+                System.out.println("Column in Student Scores.xlsx");
             }
             colCount++;
         }

@@ -23,12 +23,6 @@ public class Student {
 
 
 
-    public static String moo(){
-        return "moo";
-    }
-
-
-
     public int getBestScore(){
         if(score>retakeScore){
             return score;
